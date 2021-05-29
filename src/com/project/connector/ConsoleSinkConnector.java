@@ -8,6 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.exception.AppRuntimeException;
 import com.project.pojo.SObject;
 
+/**
+ * Writing string on console connector impl
+ * 
+ * @author shivam
+ *
+ */
 public class ConsoleSinkConnector implements SinkConnector {
 	private final String data;
 
@@ -15,6 +21,9 @@ public class ConsoleSinkConnector implements SinkConnector {
 		this.data = data;
 	}
 
+	/**
+	 * Main method
+	 */
 	public void print() {
 		if (data == null) {
 			return;
@@ -30,6 +39,7 @@ public class ConsoleSinkConnector implements SinkConnector {
 			jsonNode.get("fields").forEach((r) -> {
 				fields.append(",").append(r.get("name").asText());
 			});
+			System.out.println("");
 			System.out.println(entityName + " [" + fields.substring(1) + "]");
 		} catch (Exception e) {
 			throw new AppRuntimeException(e);

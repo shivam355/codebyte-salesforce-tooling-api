@@ -5,6 +5,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Writing string into file connector impl
+ * 
+ * @author shivam
+ *
+ */
 public class FileSinkConnector implements SinkConnector {
 	private final String directory;
 	private final String fileName;
@@ -16,6 +22,9 @@ public class FileSinkConnector implements SinkConnector {
 		this.data = data;
 	}
 
+	/**
+	 * Main method
+	 */
 	public void save() {
 		File file = new File(directory + File.separator + fileName);
 		if (!file.exists()) {

@@ -11,6 +11,12 @@ import java.net.URLConnection;
  */
 import com.project.exception.AppRuntimeException;
 
+/**
+ * API connection reader impl
+ * 
+ * @author shivam
+ *
+ */
 public class ApiConnection implements ConnReader {
 	private String url;
 	private String accessToken;
@@ -34,7 +40,7 @@ public class ApiConnection implements ConnReader {
 			}
 			return sb.toString();
 		} catch (Exception e) {
-			throw new AppRuntimeException(e);
+			throw new AppRuntimeException("Access token is invalid/expired");
 		}
 	}
 

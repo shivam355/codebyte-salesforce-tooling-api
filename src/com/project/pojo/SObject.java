@@ -1,5 +1,11 @@
 package com.project.pojo;
 
+/**
+ * SObject pojo
+ * 
+ * @author shivam
+ *
+ */
 public class SObject {
 	private String name;
 

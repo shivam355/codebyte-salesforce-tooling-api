@@ -5,6 +5,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Read from file to string connector impl
+ * 
+ * @author shivam
+ *
+ */
 public class FileSrcConnector implements SrcConnector<String> {
 	private final String directory;
 	private final String fileName;
@@ -14,6 +20,11 @@ public class FileSrcConnector implements SrcConnector<String> {
 		this.fileName = fileName;
 	}
 
+	/**
+	 * Main method
+	 * 
+	 * @return
+	 */
 	public String getFileContent() {
 		File file = new File(directory + File.separator + fileName);
 		StringBuilder sb = new StringBuilder();

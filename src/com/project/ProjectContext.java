@@ -17,6 +17,12 @@ import com.project.connector.SalesforceSrcConnector;
 import com.project.helper.ContextHelper;
 import com.project.pojo.SObject;
 
+/**
+ * Main driver class coordinating all threads and parallel executions
+ * 
+ * @author shivam
+ *
+ */
 public class ProjectContext {
 	private final String domain;
 	private final String accessToken;
@@ -34,17 +40,21 @@ public class ProjectContext {
 	}
 
 	public void start() throws Exception {
+		/* Initialization */
 		initialize();
 
-		//
+		/* Fetching list of sobjects */
 		final String allEntityUrl = contextHelper.getAllEntityUrl(domain);
 		ConnReader connReader = new ApiConnection(allEntityUrl, accessToken);
 		List<SObject> sobjects = contextHelper.getSObjects(connReader.getContent());
 
-		//
+		/* Creating appropriate pool size and executors */
 		int poolSize = contextHelper.getPoolSize(sobjects.size(), maxPoolSize);
 		ExecutorService threadPool = Executors.newFixedThreadPool(poolSize);
 
+		/*
+		 * Assigning tasks to fetch data parallely for all individual entity definations
+		 */
 		List<CompletableFuture<Void>> cfList = new ArrayList<CompletableFuture<Void>>();
 		for (SObject obj : sobjects) {
 			final String entityName = obj.getName();
@@ -54,36 +64,59 @@ public class ProjectContext {
 			cfList.add(cf);
 		}
 
-		//
+		/* Wait for completion */
 		for (CompletableFuture<Void> cf : cfList) {
 			cf.get();
 		}
 
-		//
+		/* Termination worker threads */
 		threadPool.shutdown();
 
 	}
 
+	/**
+	 * 
+	 * @param entityName
+	 * @return
+	 */
 	private String getContent(String entityName) {
 		String entityDescUrl = contextHelper.getEntityDescUrl(domain, entityName);
 		return new SalesforceSrcConnector(entityDescUrl, accessToken).getContent();
 	}
 
+	/**
+	 * 
+	 * @param entityName
+	 * @param data
+	 * @return
+	 */
 	private String save(String entityName, String data) {
 		String fileName = entityName + "_" + random.nextInt(10000);
 		new FileSinkConnector(baseDirectory, fileName, data).save();
 		return fileName;
 	}
 
+	/**
+	 * 
+	 * @param fileName
+	 * @return
+	 */
 	private String getContentFromFile(String fileName) {
 		String content = fileName.split("_")[0] + "##" + new FileSrcConnector(baseDirectory, fileName).getFileContent();
 		return content;
 	}
 
+	/**
+	 * 
+	 * @param desc
+	 */
 	private void show(String desc) {
 		new ConsoleSinkConnector(desc).print();
 	}
 
+	/**
+	 * 
+	 */
 	private void initialize() {
 		File dir = new File(baseDirectory);
 		if (!dir.exists()) {
@@ -93,6 +126,9 @@ public class ProjectContext {
 		clearDirectory();
 	}
 
+	/**
+	 * 
+	 */
 	private void clearDirectory() {
 		File dir = new File(baseDirectory);
 		for (File file : dir.listFiles()) {

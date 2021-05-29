@@ -3,6 +3,12 @@ package com.project.connector;
 import com.project.connection.ApiConnection;
 import com.project.connection.ConnReader;
 
+/**
+ * Read Salesforce api output payload to stringconnector impl
+ * 
+ * @author shivam
+ *
+ */
 public class SalesforceSrcConnector implements SrcConnector<String> {
 	private final String url;
 	private final String accessToken;
@@ -12,6 +18,11 @@ public class SalesforceSrcConnector implements SrcConnector<String> {
 		this.accessToken = accessToken;
 	}
 
+	/**
+	 * Main method
+	 * 
+	 * @return
+	 */
 	public String getContent() {
 		ConnReader connReader = new ApiConnection(url, accessToken);
 		return connReader.getContent();

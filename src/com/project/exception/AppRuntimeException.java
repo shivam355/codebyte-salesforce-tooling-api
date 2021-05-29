@@ -1,6 +1,7 @@
 package com.project.exception;
 
 /**
+ * Custom exception. Can be improved.
  * 
  * @author shivam
  *
@@ -25,6 +26,11 @@ public class AppRuntimeException extends RuntimeException {
 
 	public Exception getException() {
 		return exception;
+	}
+
+	@Override
+	public String toString() {
+		return "Issue - " + this.getMessage();
 	}
 
 }
